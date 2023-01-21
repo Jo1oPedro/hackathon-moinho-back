@@ -16,12 +16,12 @@ return new class extends Migration
         Schema::create('professionals', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('user_id')->constrained('users');
-            $table->string('educational_institution');
-            $table->float('salary_claim');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->string('educational_institution')->nullable();
+            $table->float('salary_claim')->nullable();
             $table->boolean('vacancies_notifications')->nullable()->default(false);
-            $table->string('profile_picture');
-            $table->string('curriculum');
+            $table->string('profile_picture')->nullable();
+            $table->string('curriculum')->nullable();
         });
     }
 
