@@ -2,20 +2,36 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Institution;
+use App\Models\Course_vacation;
 use App\Models\Vacancy;
 use Illuminate\Http\Request;
 
-class InstitutionsController extends Controller
+class HomeController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $query = Vacancy::query();
+
+        $request->salary ? $query->where('salary', '>=', $request->salary) : '';
+        $request->especialidade ? $query->where('role', $request->role) : '';
+        $request->name ? $query->where('name', $request->name) : '';
+
+        $vagas = $query->paginate(5);
+
+        foreach ($vagas as $vaga) {
+            $vaga['institution'] = Vacancy::where('institution_id', $vaga->user_id)->get();
+            $vaga['courses'] = Course_vacation::where('vacancy_id', $vaga->id)->get();
+        }
+
+        return response()->json($vagas, 200);
+        //salario
+        //especialidade
+        // nome
     }
 
     /**
@@ -45,19 +61,9 @@ class InstitutionsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($institution)
+    public function show($id)
     {
-        /*$institution = Institution::find($institution);
-        if(!$institution) {
-            return response()->json('Não foi possível encontrar a instituição', 400);
-        }
-
-        $vacancies = Vacancy::where('institution_id', $institution->user_id)->get();
-        return response()->json([
-            "institution" => $institution,
-            "vacancies" => $vacancies,
-        ], 200);*/
-
+        //
     }
 
     /**

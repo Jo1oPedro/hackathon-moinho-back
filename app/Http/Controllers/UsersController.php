@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UsersFormRequest;
+use App\Models\Course_professional;
 use App\Models\Institution;
 use App\Models\Professional;
+use App\Models\Professional_role;
 use App\Models\Teacher;
+use App\Models\Vacancy;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,6 +17,44 @@ use App\Models\User;
 
 class UsersController extends Controller
 {
+
+    public function index(Request $request)
+    {
+        $request->headers->all()['user'][0];
+        $request->headers->all()['user_type'][0];
+
+        if(Auth::user()->user_type == 0) {
+            $institution = Auth::user();
+            if(!$institution) {
+                return response()->json('Não foi possível encontrar o usuário', 400);
+            }
+
+            $vacancies = Vacancy::where('institution_id', $institution->user_id)->get();
+            return response()->json([
+                "institution" => $institution,
+                "vacancies" => $vacancies,
+            ], 200);
+        } else if(Auth::user()->user_type == 1) {
+            $professional = Auth::user();
+            if(!$professional) {
+                return response()->json('Não foi possível encontrar o usuário', 400);
+            }
+
+            $roles = Professional_role::where('professional_id', $professional->user_id)->get();
+            $courses = Course_professional::where('professional_id', $professional->user_id)->get();
+            return response()->json([
+                "professional" => $professional,
+                "roles" => $roles,
+                "courses" => $courses,
+            ]);
+
+        } else {
+            $teacher = Teacher::find(Auth::user());
+            if(!$teacher) {
+                return response()->json('Não foi possível encontrar o usuário', 400);
+            }
+        }
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -32,45 +73,58 @@ class UsersController extends Controller
             $user->delete();
             return response()->json('Erro ao criar o usuário', 400);
         }
-        Auth::login($user);
-        $token = Auth::user()->createToken('token');
+        Auth::attempt(["email" => $user->email, "password" => $request->password]);
+        $user = Auth::user();
+        $token = $user->createToken('token');
+
         return response()->json(
             [
                 'token' => $token->plainTextToken,
+                'user_type' => $user->user_type,
                 'id' => $user->id,
-            ], 200); // Não é necessario retornar um json pois o laravel já sabe transformar o retorno em um, porém para tornar mais claro isso é interessante usar essa função
-
+            ], 200
+        ); // Não é necessario retornar um json pois o laravel já sabe transformar o retorno em um, porém para tornar mais claro isso é interessante usar essa função
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function show($user, $type)
     {
-        $user = match(User::find($id)?->user_type) {
-            0 => Institution::where('user_id', $id)->get(),
-            1 => Professional::where('user_id', $id)->get(),
-            2 => Teacher::where('user_id', $id)->get(),
-            default => null
-        };
-
-        if(!$user) {
-            return response()->json('Usuário não encontrado', 400);
-        }
-
-        /*$user['posts'] = $user->posts;
-            foreach($user['posts'] as $post) {
-                $post->author = $user->name;
+        if($type == 0) {
+            $institution = Institution::find($user);
+            if(!$institution) {
+                return response()->json('Não foi possível encontrar o usuário', 400);
             }
-        return response()->json($user, 201);*/
 
+            $vacancies = Vacancy::where('institution_id', $institution->user_id)->get();
+            return response()->json([
+                "institution" => $institution,
+                "vacancies" => $vacancies,
+            ], 200);
+        } else if($type == 1) {
+            $professional = Professional::find($user);
+            if(!$professional) {
+                return response()->json('Não foi possível encontrar o usuário', 400);
+            }
+
+            $roles = Professional_role::where('professional_id', $professional->user_id)->get();
+            $courses = Course_professional::where('professional_id', $professional->user_id)->get();
+            return response()->json([
+                "professional" => $professional,
+                "roles" => $roles,
+                "courses" => $courses,
+            ]);
+
+        } else {
+            $teacher = Teacher::find($user);
+            if(!$teacher) {
+                return response()->json('Não foi possível encontrar o usuário', 400);
+            }
+        }
     }
+
     public function destroy($user)
     {
         User::destroy($user);
+        return response()->json('Usuário deletado com sucesso', 200);
     }
 
     public function userType($user, $cnpj)

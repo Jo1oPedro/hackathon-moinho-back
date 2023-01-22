@@ -3,6 +3,10 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\InstitutionsController;
+use App\Http\Controllers\ProfessionalsController;
+use App\Http\Controllers\TeachersController;
+use App\Http\Controllers\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,12 +19,16 @@ use App\Http\Controllers\UsersController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+/*Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
-});
+});*/
 
 /*Route::middleware('auth:sanctum')->group(function () {
 
 });*/
+Route::get('/user', [UsersController::class, 'index']);
+Route::get('/home', [HomeController::class, 'index']);
 Route::post('/users', [UsersController::class, 'store']);
 Route::delete('/users/{user}', [UsersController::class, 'destroy']);
+Route::get('/users/{user}/{type}', [UsersController::class, 'show']);
+
