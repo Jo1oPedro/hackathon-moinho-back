@@ -18,6 +18,7 @@ class CourseController extends Controller
 
         foreach ($courses as $course) {
             $course['teacher'] = Teacher::where('id', $course->teacher_id)->get();
+            $course['teacher'][0]['user'] = User::where('id', $course['teacher'][0]['user_id'])->get();
         }
 
         return response()->json($courses, 200);
