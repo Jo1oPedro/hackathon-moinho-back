@@ -42,7 +42,7 @@ class UsersController extends Controller
                 return response()->json('Não foi possível encontrar o usuário', 400);
             }
 
-            $roles = Role::whereIn('id', Professional_role::where('professional_id', $professional->id)->get())->get();
+            $roles = Role::whereIn('id', Professional_role::where('professional_id', $professional->id)->get('role_id'))->get();
             $courses = Course_professional::where('professional_id', $professional->id)->get();
             $vagas = Professional_vacation::where('professional_id', $professional->id)->get();
             return response()->json([
