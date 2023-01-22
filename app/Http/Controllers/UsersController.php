@@ -41,9 +41,9 @@ class UsersController extends Controller
                 return response()->json('Não foi possível encontrar o usuário', 400);
             }
 
-            $roles = Professional_role::where('professional_id', $professional->user_id)->get();
-            $courses = Course_professional::where('professional_id', $professional->user_id)->get();
-            $vagas = Professional_vacation::where('professional_id', $professional->user_id)->get();
+            $roles = Professional_role::where('professional_id', $professional->id)->get();
+            $courses = Course_professional::where('professional_id', $professional->id)->get();
+            $vagas = Professional_vacation::where('professional_id', $professional->id)->get();
             return response()->json([
                 "user" => Auth::user(),
                 "professional" => $professional,
