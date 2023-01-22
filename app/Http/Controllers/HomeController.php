@@ -8,6 +8,7 @@ use App\Models\Institution;
 use App\Models\Role;
 use App\Models\Vacancy;
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class HomeController extends Controller
 {
