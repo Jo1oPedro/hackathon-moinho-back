@@ -8,6 +8,7 @@ use App\Http\Controllers\ProfessionalsController;
 use App\Http\Controllers\TeachersController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\RoleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +32,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/users/{user}', [UsersController::class, 'destroy']);
     Route::get('/users/{user}/{type?}', [UsersController::class, 'show']);
     Route::post('logout', [LoginController::class, 'logout']);
+    Route::get('/roles', [RoleController::class, 'index']);
 });
 Route::post('/users', [UsersController::class, 'store']);
 Route::post('/login', [LoginController::class, 'login']);
