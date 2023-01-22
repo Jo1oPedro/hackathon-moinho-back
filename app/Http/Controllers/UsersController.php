@@ -28,6 +28,7 @@ class UsersController extends Controller
             }
 
             $vacancies = Vacancy::where('institution_id', $institution->user_id)->get();
+
             return response()->json([
                 "user" => Auth::user(),
                 "institution" => $institution,

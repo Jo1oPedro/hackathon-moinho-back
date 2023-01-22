@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Course;
 use App\Models\Course_vacation;
 use App\Models\Institution;
+use App\Models\Role;
 use App\Models\Vacancy;
 use Illuminate\Http\Request;
 
@@ -29,6 +30,7 @@ class HomeController extends Controller
             //dd($vaga->institution_id);
             $vaga['institution'] = Institution::where('id', $vaga->institution_id)->get();
             $vaga['courses'] = Course::whereIn('id', Course_vacation::where('vacancy_id', $vaga->id)->get('course_id'))->get();
+            $vaga['role'] = Role::where('id', $vaga->role_id)->get();
         }
 
         return response()->json($vagas, 200);
