@@ -18,6 +18,7 @@ return new class extends Migration
             $table->timestamps();
             $table->foreignId('institution_id')->constrained('institutions');
             $table->foreignId('role_id')->constrained('roles');
+            $table->string('name');
             $table->string('description');
             $table->float('salary');
             $table->string('period');
