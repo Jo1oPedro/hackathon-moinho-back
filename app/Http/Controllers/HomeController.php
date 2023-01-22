@@ -68,9 +68,9 @@ class HomeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($vacancy)
     {
-        $vacancy = Vacancy::where('id', $id);
+        $vacancy = Vacancy::where('id', $vacancy);
         if($vacancy) {
             $vacancy['institution'] = Institution::where('id', $vacancy->institution_id)->get();
             $vacancy['courses'] = Course::whereIn('id', Course_vacation::where('vacancy_id', $vacancy->id)->get('course_id'))->get();

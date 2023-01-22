@@ -26,6 +26,7 @@ use App\Http\Controllers\LoginController;
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [UsersController::class, 'authProfille']);
+    Route::get('/home/{vacancy]', [HomeController::class, 'show']);
     Route::get('/home', [HomeController::class, 'index']);
     Route::delete('/users/{user}', [UsersController::class, 'destroy']);
     Route::get('/users/{user}/{type?}', [UsersController::class, 'show']);
