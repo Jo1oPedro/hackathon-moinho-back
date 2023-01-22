@@ -139,9 +139,9 @@ class UsersController extends Controller
     public function userType($user, $cnpj)
     {
         match($user->user_type) {
-            0 => Institution::create(["user_id" => $user->id, "cnpj" => $cnpj]),
-            1 => Professional::create(["user_id" => $user->id]),
-            2 => Teacher::create(["user_id" => $user->id]),
+            '0' => Institution::create(["user_id" => $user->id, "cnpj" => $cnpj]),
+            '1' => Professional::create(["user_id" => $user->id]),
+            '2' => Teacher::create(["user_id" => $user->id]),
             default => null
         };
     }
