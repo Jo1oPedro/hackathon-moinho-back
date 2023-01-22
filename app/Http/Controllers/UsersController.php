@@ -8,6 +8,7 @@ use App\Models\Institution;
 use App\Models\Professional;
 use App\Models\Professional_role;
 use App\Models\Professional_vacation;
+use App\Models\Role;
 use App\Models\Teacher;
 use App\Models\Vacancy;
 use Illuminate\Http\JsonResponse;
@@ -41,7 +42,7 @@ class UsersController extends Controller
                 return response()->json('Não foi possível encontrar o usuário', 400);
             }
 
-            $roles = Professional_role::where('professional_id', $professional->id)->get();
+            $roles = Role::whereIn('id', Professional_role::where('professional_id', $professional->id)->get())->get();
             $courses = Course_professional::where('professional_id', $professional->id)->get();
             $vagas = Professional_vacation::where('professional_id', $professional->id)->get();
             return response()->json([
