@@ -18,7 +18,7 @@ class HomeController extends Controller
         $query = Vacancy::query();
 
         $request->salary ? $query->where('salary', '>=', $request->salary) : '';
-        $request->especialidade ? $query->where('role', $request->role) : '';
+        $request->role ? $query->where('role', $request->role) : '';
         $request->name ? $query->where('name', $request->name) : '';
 
         $vagas = $query->paginate(5);
