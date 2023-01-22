@@ -18,6 +18,7 @@ return new class extends Migration
             $table->timestamps();
             $table->string('nome');
             $table->string('descricao');
+            $table->foreignId('teacher_id')->constrained('teachers');
         });
     }
 
