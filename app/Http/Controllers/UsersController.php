@@ -22,7 +22,7 @@ class UsersController extends Controller
     public function authProfille(Request $request)
     {
         if(Auth::user()->user_type == 0) {
-            $institution = Institution::where("user_id", Auth::user()->id)->first();//Auth::user();
+            $institution = Institution::where("id", Auth::user()->id)->first();//Auth::user();
             if(!$institution) {
                 return response()->json('Não foi possível encontrar o usuário', 400);
             }
@@ -33,7 +33,7 @@ class UsersController extends Controller
                 "vacancies" => $vacancies,
             ], 200);
         } else if(Auth::user()->user_type == 1) {
-            $professional = Professional::where('user_id', Auth::user()->id)->first();
+            $professional = Professional::where('id', Auth::user()->id)->first();
 
             if(!$professional) {
                 return response()->json('Não foi possível encontrar o usuário', 400);
