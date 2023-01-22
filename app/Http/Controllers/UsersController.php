@@ -47,7 +47,8 @@ class UsersController extends Controller
             $courses = Course::whereIn('id', Course_professional::where('professional_id', $professional->id)->get('course_id'))->get();
             $vagas = Vacancy::whereIn('id', Professional_vacation::where('professional_id', $professional->id)->get('vacancie_id'))->get();
             foreach($vagas as $vaga) {
-                $vaga['institution_id'] = Institution::where('id', $vaga['institution_id'])->get();
+                $vaga['institution'] = Institution::where('id', $vaga['institution_id'])->get();
+                $vaga['role_id'] = Role::where('id', $vaga['role_id'])->get();
             }
             return response()->json([
                 "user" => Auth::user(),
