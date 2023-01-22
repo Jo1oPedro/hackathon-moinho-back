@@ -70,7 +70,14 @@ class HomeController extends Controller
      */
     public function show($id)
     {
-        //
+        $vacancy = Vacancy::where('id', $id);
+        if($vacancy) {
+            $vacancy['institution'] = Institution::where('id', $vacancy->institution_id)->get();
+            $vacancy['courses'] = Course::whereIn('id', Course_vacation::where('vacancy_id', $vacancy->id)->get('course_id'))->get();
+            $vacancy['role'] = Role::where('id', $vacancy->role_id)->get();
+            $vacancy['user'] = User::where('id', $vacancy['institution'][0]->user_id)->get('name');
+        }
+        return response()->json('Vaga não encontrada', 400);
     }
 
     /**
