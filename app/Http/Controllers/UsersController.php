@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UsersFormRequest;
+use App\Models\Course;
 use App\Models\Course_professional;
 use App\Models\Institution;
 use App\Models\Professional;
@@ -43,7 +44,7 @@ class UsersController extends Controller
             }
 
             $roles = Role::whereIn('id', Professional_role::where('professional_id', $professional->id)->get('role_id'))->get();
-            $courses = Course_professional::where('professional_id', $professional->id)->get();
+            $courses = Course::whereIn('id', Course_professional::where('professional_id', $professional->id)->get('course_id'))->get();
             $vagas = Professional_vacation::where('professional_id', $professional->id)->get();
             return response()->json([
                 "user" => Auth::user(),
