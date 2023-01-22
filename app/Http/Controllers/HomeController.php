@@ -31,6 +31,7 @@ class HomeController extends Controller
             $vaga['institution'] = Institution::where('id', $vaga->institution_id)->get();
             $vaga['courses'] = Course::whereIn('id', Course_vacation::where('vacancy_id', $vaga->id)->get('course_id'))->get();
             $vaga['role'] = Role::where('id', $vaga->role_id)->get();
+            $vaga['user'] = User::where('id', $vaga['institution'][0]->user_id)->get('name');
         }
 
         return response()->json($vagas, 200);
