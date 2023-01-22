@@ -7,6 +7,7 @@ use App\Http\Controllers\InstitutionsController;
 use App\Http\Controllers\ProfessionalsController;
 use App\Http\Controllers\TeachersController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,12 +24,11 @@ use App\Http\Controllers\HomeController;
     return $request->user();
 });*/
 
-/*Route::middleware('auth:sanctum')->group(function () {
-
-});*/
-Route::get('/user', [UsersController::class, 'index']);
-Route::get('/home', [HomeController::class, 'index']);
-Route::post('/users', [UsersController::class, 'store']);
-Route::delete('/users/{user}', [UsersController::class, 'destroy']);
-Route::get('/users/{user}/{type}', [UsersController::class, 'show']);
-
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/user', [UsersController::class, 'authProfille']);
+    Route::get('/home', [HomeController::class, 'index']);
+    Route::post('/users', [UsersController::class, 'store']);
+    Route::delete('/users/{user}', [UsersController::class, 'destroy']);
+    Route::get('/users/{user}/{type?}', [UsersController::class, 'show']);
+});
+Route::post('/login', [LoginController::class, 'login']);

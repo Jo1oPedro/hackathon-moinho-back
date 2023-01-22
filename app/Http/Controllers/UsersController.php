@@ -7,6 +7,7 @@ use App\Models\Course_professional;
 use App\Models\Institution;
 use App\Models\Professional;
 use App\Models\Professional_role;
+use App\Models\Professional_vacation;
 use App\Models\Teacher;
 use App\Models\Vacancy;
 use Illuminate\Http\JsonResponse;
@@ -18,13 +19,10 @@ use App\Models\User;
 class UsersController extends Controller
 {
 
-    public function index(Request $request)
+    public function authProfille(Request $request)
     {
-        $request->headers->all()['user'][0];
-        $request->headers->all()['user_type'][0];
-
         if(Auth::user()->user_type == 0) {
-            $institution = Auth::user();
+            $institution = Institution::where("user_id", Auth::user()->id)->first();//Auth::user();
             if(!$institution) {
                 return response()->json('Não foi possível encontrar o usuário', 400);
             }
@@ -35,17 +33,20 @@ class UsersController extends Controller
                 "vacancies" => $vacancies,
             ], 200);
         } else if(Auth::user()->user_type == 1) {
-            $professional = Auth::user();
+            $professional = Professional::where('user_id', Auth::user()->id)->first();
+
             if(!$professional) {
                 return response()->json('Não foi possível encontrar o usuário', 400);
             }
 
             $roles = Professional_role::where('professional_id', $professional->user_id)->get();
             $courses = Course_professional::where('professional_id', $professional->user_id)->get();
+            $vagas = Professional_vacation::where('professional_id', $professional->user_id)->get();
             return response()->json([
                 "professional" => $professional,
                 "roles" => $roles,
                 "courses" => $courses,
+                "vagas" => $vagas,
             ]);
 
         } else {
@@ -86,10 +87,18 @@ class UsersController extends Controller
         ); // Não é necessario retornar um json pois o laravel já sabe transformar o retorno em um, porém para tornar mais claro isso é interessante usar essa função
     }
 
-    public function show($user, $type)
+    public function show($user, $type = -1)
     {
+        if($type == -1) {
+            if(Institution::where('user_id', $user)->get()) {
+                $type = 0;
+            } else if(Professional::where('user_id', $user)->get()) {
+                $type = 1;
+            }
+        }
+
         if($type == 0) {
-            $institution = Institution::find($user);
+            $institution = Institution::where('user_id', $user)->get()[0];
             if(!$institution) {
                 return response()->json('Não foi possível encontrar o usuário', 400);
             }
@@ -100,7 +109,7 @@ class UsersController extends Controller
                 "vacancies" => $vacancies,
             ], 200);
         } else if($type == 1) {
-            $professional = Professional::find($user);
+            $professional = Professional::where('user_id', $user)->get()[0];
             if(!$professional) {
                 return response()->json('Não foi possível encontrar o usuário', 400);
             }
