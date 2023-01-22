@@ -29,6 +29,7 @@ class UsersController extends Controller
 
             $vacancies = Vacancy::where('institution_id', $institution->user_id)->get();
             return response()->json([
+                "user" => Auth::user(),
                 "institution" => $institution,
                 "vacancies" => $vacancies,
             ], 200);
@@ -43,6 +44,7 @@ class UsersController extends Controller
             $courses = Course_professional::where('professional_id', $professional->user_id)->get();
             $vagas = Professional_vacation::where('professional_id', $professional->user_id)->get();
             return response()->json([
+                "user" => Auth::user(),
                 "professional" => $professional,
                 "roles" => $roles,
                 "courses" => $courses,
