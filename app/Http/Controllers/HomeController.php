@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Address;
 use App\Models\Course;
 use App\Models\Course_vacation;
 use App\Models\Institution;
@@ -33,6 +34,7 @@ class HomeController extends Controller
             $vaga['courses'] = Course::whereIn('id', Course_vacation::where('vacancy_id', $vaga->id)->get('course_id'))->get();
             $vaga['role'] = Role::where('id', $vaga->role_id)->get();
             $vaga['user'] = User::where('id', $vaga['institution'][0]->user_id)->get('name');
+            $vaga['address'] = Address::where('id', $vaga['institution'][0]->address_id)->get();
         }
 
         return response()->json($vagas, 200);
